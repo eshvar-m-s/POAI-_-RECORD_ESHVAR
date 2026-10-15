@@ -1,0 +1,39 @@
+def solve_n_queens(n):
+    solutions = []
+    cols = set() 
+    pos_diags = set()  
+    neg_diags = set()  
+    board = [["."] * n for _ in range(n)]
+    def backtrack(row):
+        if row == n:
+            solutions.append([" ".join(r) for r in board])
+            return
+        for col in range(n):
+            p_diag = row + col
+            n_diag = row - col
+            if col in cols or p_diag in pos_diags or n_diag in neg_diags:
+                continue
+            board[row][col] = "Q"
+            cols.add(col)
+            pos_diags.add(p_diag)
+            neg_diags.add(n_diag)
+            backtrack(row + 1)
+            board[row][col] = "."
+            cols.remove(col)
+            pos_diags.remove(p_diag)
+            neg_diags.remove(n_diag)
+    backtrack(0)
+    return solutions
+def print_solutions(solutions):
+    if not solutions:
+        print("No solutions found.")
+        return
+    print(f"Found {len(solutions)} distinct solutions:\n")
+    for idx, sol in enumerate(solutions, 1):
+        print(f"--- Solution {idx} ---")
+        for row in sol:
+            print(row)
+        print()
+N = 4
+all_solutions = solve_n_queens(N)
+print_solutions(all_solutions)
