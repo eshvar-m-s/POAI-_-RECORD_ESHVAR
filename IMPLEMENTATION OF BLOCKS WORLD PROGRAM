@@ -1,0 +1,66 @@
+
+class BlocksWorld:
+    def __init__(self, num_blocks):
+        self.state = [[block] for block in range(num_blocks)]
+        self.num_blocks = num_blocks
+
+    def display_state(self):
+        for stack in self.state:
+            print(f"Block(s) on stack: {stack}")
+
+    def find_block(self, block):
+        for stack in self.state:
+            if block in stack:
+                return stack
+        return None
+
+    def move(self, block, destination):
+        source_stack = self.find_block(block)
+
+        if source_stack is None or source_stack[-1] != block:
+            print(f"Invalid move for block {block}.")
+            return
+
+        if destination is not None:
+            destination_stack = self.find_block(destination)
+
+            if destination_stack is None or destination_stack[-1] != destination:
+                print(f"Invalid destination {destination}.")
+                return
+
+            if block == destination:
+                print("A block cannot be moved onto itself.")
+                return
+        else:
+            destination_stack = None
+
+        source_stack.remove(block)
+
+        if destination_stack is not None:
+            destination_stack.append(block)
+        else:
+            self.state.append([block])
+
+        self.state = [stack for stack in self.state if stack]
+        self.display_state()
+
+    def goal_state(self, goal):
+        self.state = [stack[:] for stack in goal]
+        print("Goal state set.")
+        self.display_state()
+
+def main():
+    blocks_world = BlocksWorld(3)
+
+    print("Initial state:")
+    blocks_world.display_state()
+
+    goal = [[0, 1], [2]]
+    blocks_world.goal_state(goal)
+
+    print("\nPerforming Moves:")
+    blocks_world.move(1, 2)
+    blocks_world.move(0, 1)
+
+if __name__ == "__main__":
+    main()
